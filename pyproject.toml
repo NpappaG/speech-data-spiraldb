@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "speech-slices"
+version = "0.1.0"
+description = "A reproducible Vortex-to-PyTorch speech cookbook with a Parquet comparison"
+authors = []
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+vortex-data = ">=0.56,<1"
+pyarrow = ">=21,<26"
+torch = ">=2.6,<3"
+datasets = ">=4,<6"
+soundfile = ">=0.13,<0.14"
+numpy = ">=2,<3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8,<10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+markers = ["real_data: requires explicitly prepared local data (--real-data)"]
+
+[build-system]
+requires = ["poetry-core>=1.6"]
+build-backend = "poetry.core.masonry.api"

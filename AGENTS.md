@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository is a planned local speech-data cookbook comparing Vortex and Parquet readers that produce PyTorch batches. Implementation has not started. Use `docs/milestones/project_plan.md` for priorities and each milestone’s `scope.md` as its execution contract; `speech-slices-milestones.md` links to the tracking system.
+This repository is a planned local speech-data cookbook comparing Vortex and Parquet readers that produce PyTorch batches. M01 environment and offline feasibility checks are complete. Use `docs/milestones/project_plan.md` for priorities and each milestone’s `scope.md` as its execution contract; `speech-slices-milestones.md` links to the tracking system.
 
 The planned layout is:
 - `prepare.py`: stream a pinned LibriSpeech subset and write equivalent dataset files.
@@ -15,8 +15,8 @@ The planned layout is:
 
 ## Build, Test, and Development Commands
 
-No build or development commands are configured yet. Bootstrap with Poetry and commit `pyproject.toml` and `poetry.lock`. Once the planned modules and dependencies exist, use:
-- `poetry install`: install locked dependencies.
+Use Python 3.11 and Poetry; `pyproject.toml` and `poetry.lock` define dependencies. Run `poetry install --no-root` and `poetry run pytest` for offline checks. The following script commands become available as later milestones ship:
+- `poetry install --no-root`: install locked dependencies.
 - `poetry run python prepare.py`: prepare matching dataset files.
 - `poetry run pytest`: run correctness tests.
 - `poetry run python benchmark.py`: collect benchmark measurements.

@@ -6,9 +6,8 @@ The [bead design review](design_review.md) records the pre-implementation audit 
 
 ## Current milestones (planned or active)
 
-No milestone is Active yet.
+No milestone is Active; the next dependency-ready milestone is Planned.
 
-- M01 – Bootstrap and smoke-test: Planned — [scope](M01_bootstrap/scope.md), [report](M01_bootstrap/completion_report.md)
 - M02 – Prepare one dataset in two formats: Planned — [scope](M02_dataset_preparation/scope.md), [report](M02_dataset_preparation/completion_report.md)
 - M03 – Select a reproducible training subset: Planned — [scope](M03_subset_selection/scope.md), [report](M03_subset_selection/completion_report.md)
 - M04 – Produce real PyTorch batches: Planned — [scope](M04_pytorch_batches/scope.md), [report](M04_pytorch_batches/completion_report.md)
@@ -41,4 +40,4 @@ Update report dates whenever evidence changes and the dashboard date whenever pr
 
 ## Completed milestones
 
-None. See the [archive index](archive/README.md) for completed delivery records.
+See the [archive index](archive/README.md) for completed delivery records.

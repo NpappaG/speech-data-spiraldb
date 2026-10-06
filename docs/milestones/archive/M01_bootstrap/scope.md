@@ -1,6 +1,6 @@
 # M01: Bootstrap and smoke-test
 
-- Status: Planned
+- Status: Complete (2026-10-06)
 - Phase: 1 / Foundation
 - Dependencies: Existing Git repository; no implementation prerequisites.
 - Blocks: M02; establishes reader APIs and test conventions for M03–M05.
@@ -41,9 +41,9 @@ Locked installation succeeds; offline tests prove both formats preserve the type
 
 **Scope:**
 
-- [ ] 0.1 Select a supported Python version, verify package/platform requirements, and create `pyproject.toml` and `poetry.lock` with the dependencies above.
-- [ ] 0.2 Ignore `data/`, local environments, caches, and temporary outputs; retain tracked benchmark JSON and documentation. Confirm ignore behavior with `git check-ignore`.
-- [ ] 0.3 Document exact installation and offline test commands in the README; begin `docs/developer-experience.md` with observed setup friction and versions.
+- [x] 0.1 Select a supported Python version, verify package/platform requirements, and create `pyproject.toml` and `poetry.lock` with the dependencies above.
+- [x] 0.2 Ignore `data/`, local environments, caches, and temporary outputs; retain tracked benchmark JSON and documentation. Confirm ignore behavior with `git check-ignore`.
+- [x] 0.3 Document exact installation and offline test commands in the README; begin `docs/developer-experience.md` with observed setup friction and versions.
 
 **Exit criteria:** Installation from the lockfile and imports succeed; ignore checks pass; a developer can repeat setup using the README.
 
@@ -53,9 +53,9 @@ Locked installation succeeds; offline tests prove both formats preserve the type
 
 **Scope:**
 
-- [ ] 1.1 Create deterministic temporary-file fixtures with explicit Arrow types, source-order indices, transcript/metadata fields, and binary audio payloads; write the same table to both formats.
-- [ ] 1.2 Check each full read against the original fixture, not just against the other reader. Verify native filter + metadata-only projection against manually expected IDs, including exact boundaries.
-- [ ] 1.3 Verify incremental batch iteration, stable order, native filter/projection arguments, and supported reader thread settings. Record exact working APIs and any limitations in the report.
+- [x] 1.1 Create deterministic temporary-file fixtures with explicit Arrow types, source-order indices, transcript/metadata fields, and binary audio payloads; write the same table to both formats.
+- [x] 1.2 Check each full read against the original fixture, not just against the other reader. Verify native filter + metadata-only projection against manually expected IDs, including exact boundaries.
+- [x] 1.3 Verify incremental batch iteration, stable order, native filter/projection arguments, and supported reader thread settings. Record exact working APIs and any limitations in the report.
 
 **Exit criteria:** Both readers preserve logical values/schema and expose a usable projected, filtered batch stream; an incompatible API is an explicit blocker, not a silent full-table fallback.
 
@@ -65,8 +65,8 @@ Locked installation succeeds; offline tests prove both formats preserve the type
 
 **Scope:**
 
-- [ ] 2.1 Generate a tiny known-waveform WAV in memory and verify SoundFile can inspect headers and decode its bytes to mono float32 samples. Verify FLAC support needed for the source.
-- [ ] 2.2 Keep fixtures network-free and generated in pytest temporary directories. Document that real-data checks will be explicitly opted into after M02.
-- [ ] 2.3 Run the offline suite and record exact commands, results, package versions, and remaining API questions.
+- [x] 2.1 Generate a tiny known-waveform WAV in memory and verify SoundFile can inspect headers and decode its bytes to mono float32 samples. Verify FLAC support needed for the source.
+- [x] 2.2 Keep fixtures network-free and generated in pytest temporary directories. Document that real-data checks will be explicitly opted into after M02.
+- [x] 2.3 Run the offline suite and record exact commands, results, package versions, and remaining API questions.
 
 **Exit criteria:** `poetry run pytest` succeeds without network or downloaded data, and byte decoding matches known fixture samples.

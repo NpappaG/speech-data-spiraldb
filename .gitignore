@@ -218,3 +218,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Speech cookbook generated inputs, staging files, and local tools
+data/
+.tools/
+*.tmp

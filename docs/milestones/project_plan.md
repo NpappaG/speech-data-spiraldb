@@ -10,18 +10,6 @@ A small local Vortex cookbook: filter speech metadata, decode selected audio, an
 
 ## Active milestones
 
-None; implementation has not started. Start M01 next, then follow M01 → M06. No confirmed blockers. The [planning review](design_review.md) explains the revised bead boundaries and safeguards.
-
-## Planned milestones
-
-### M01 – Bootstrap and smoke-test
-
-- Status: Planned
-- Why: Prove installation and both reader paths before downloading audio.
-- Progress: Scope reviewed; no implementation.
-- Next: Lock compatible dependencies; test native scans and byte decoding.
-- Risks/Blocks: Package/API and codec compatibility.
-- See: [scope](M01_bootstrap/scope.md)
 
 ### M02 – Prepare one dataset in two formats
 
@@ -70,7 +58,8 @@ None; implementation has not started. Start M01 next, then follow M01 → M06. N
 
 ## Completed milestones
 
-None; completed specs and evidence will live in `archive/`.
+- M01 – Bootstrap and smoke-test: Complete (2026-10-06). Locked the Python 3.11 environment and verified both native scanners plus known-sample WAV/FLAC decoding. [Scope](archive/M01_bootstrap/scope.md) · [Report](archive/M01_bootstrap/completion_report.md)
+
 
 ## Future candidates / parking lot
 
