@@ -2,7 +2,7 @@
 
 A small local experiment comparing Vortex and Parquet: select speech metadata,
 read matching encoded audio, and yield PyTorch waveform batches. This uses direct
-file readers, not the Spiral platform. Implementation follows the
+file readers, not the Spiral platform. Execution evidence is recorded in the
 [milestone dashboard](docs/milestones/project_plan.md).
 
 ## Setup

@@ -2,43 +2,58 @@
 
 ## Project Structure & Module Organization
 
-This repository is a planned local speech-data cookbook comparing Vortex and Parquet readers that produce PyTorch batches. M01 environment and offline feasibility checks are complete. Use `docs/milestones/project_plan.md` for priorities and each milestone’s `scope.md` as its execution contract; `speech-slices-milestones.md` links to the tracking system.
+This is a local Vortex-to-PyTorch speech cookbook with a Parquet comparison.
+`prepare.py` streams a pinned LibriSpeech prefix and publishes equivalent files;
+`loaders.py` performs native filtering and shared decoding/batching;
+`benchmark.py` collects correctness-gated timings. `common.py` defines schema,
+provenance, and explicit artifact preflight checks.
 
-The planned layout is:
-- `prepare.py`: stream a pinned LibriSpeech subset and write equivalent dataset files.
-- `loaders.py`: filter metadata, read selected audio, and share decoding and batching logic.
-- `benchmark.py`: measure selection and batch-loading performance.
-- `tests/test_equivalence.py`: verify both formats produce equivalent data and batches.
-- `data/`: generated `clips.vortex` and `clips.parquet` files.
-- `results/measurements.json`: raw timings and medians.
-- `docs/developer-experience.md`: onboarding observations and API feedback.
+`tests/` contains generated-fixture tests plus opt-in real-data checks.
+`data/` holds ignored audio files, manifests, and acquisition caches.
+`results/` contains tracked raw measurement evidence. `docs/developer-experience.md`
+records observed integration friction. Milestone contracts and reports live under
+`docs/milestones/`, with completed work in `archive/`.
 
 ## Build, Test, and Development Commands
 
-Use Python 3.11 and Poetry; `pyproject.toml` and `poetry.lock` define dependencies. Run `poetry install --no-root` and `poetry run pytest` for offline checks. The following script commands become available as later milestones ship:
-- `poetry install --no-root`: install locked dependencies.
-- `poetry run python prepare.py`: prepare matching dataset files.
-- `poetry run pytest`: run correctness tests.
-- `poetry run python benchmark.py`: collect benchmark measurements.
+Use Python 3.11 and Poetry; commit dependency changes with `poetry.lock`.
 
-Document actual arguments and prerequisites in the README as commands become available.
+- `poetry install --no-root`: install locked runtime/test dependencies.
+- `poetry run pytest`: run offline generated-fixture tests.
+- `poetry run python prepare.py --limit 50 --output-dir data/dev50`: prepare a development prefix.
+- `poetry run python prepare.py`: prepare the pinned 1,000-row delivery subset.
+- `poetry run python loaders.py --verify-batches`: save membership and verify complete batch equivalence.
+- `poetry run pytest --real-data`: require prepared data and verify integration/evidence.
+- `poetry run python benchmark.py`: save paired measurements after the correctness gate.
+
+Use fresh output paths or explicitly request preparation overwrite. Keep exact
+commands and prerequisites current in the README.
 
 ## Coding Style & Naming Conventions
 
-Use four-space indentation and standard Python conventions: `snake_case` for modules, functions, and variables; `PascalCase` for classes. Keep preparation, selection, decoding, and timing responsibilities separate. No formatter or linter is configured; document any tooling introduced in `pyproject.toml`.
+Use four spaces, `snake_case` modules/functions/variables, and `PascalCase` classes.
+Keep preparation, scanning, decoding, and timing separate. No formatter or linter
+is configured; document new tooling in `pyproject.toml`.
 
 ## Testing Guidelines
 
-Use pytest with `tests/test_*.py` files and `test_*` functions. No coverage threshold is established. Check each reader against independent fixtures before cross-format equivalence. Verify ordered IDs, metadata, audio bytes, waveform values, lengths, and lazy decoding. Cover a nonempty filtered subset, consistent sample rates, and final partial batches. Default tests must be offline; opt into real-data verification explicitly. Develop with 50 examples before the 1,000-example subset.
+Use pytest `tests/test_*.py` files and `test_*` functions. No coverage threshold
+is established. Verify readers independently before cross-format equality.
+Cover predicate boundaries, empty selections, artifact identity, known waveforms,
+padding, partial batches, lazy decoding, and timing arithmetic. Default tests
+must require neither network nor downloaded data; opt-in missing data must fail.
 
 ## Commit & Pull Request Guidelines
 
-Git history contains only `Initial commit`, so no commit convention is established. Use concise, imperative messages describing one coherent change. PRs should explain behavior, relevant milestones, validation commands and outcomes, and reproducibility impacts. Benchmark claims must include timing boundaries, package versions, hardware, cache conditions, and raw results.
+Use concise imperative commits for coherent checkpoints. PRs should explain
+behavior, milestone scope, exact validation outcomes, and reproducibility impacts.
+Include raw evidence and cache/hardware/version context for benchmark claims.
 
-## Data & Scope
+## Milestone & Scope Rules
 
-Pin dataset revisions and preserve source order. Ignore downloaded audio and generated dataset files before creating them. Keep credentials out of Git. Exclude downloads and preparation from benchmark timing; use identical decoding and batching for both formats. Treat small-run timings as cookbook evidence; no speedup is required. Defer model training, cloud services, and multi-worker tuning.
-
-## Milestone Tracking
-
-Follow `docs/milestones/README.md`. On starting work, mark the scope, report, and dashboard Active. Record shipped changes and exact validation commands/results in `completion_report.md`; maintain runnable commands and observed experience notes as work ships. On completion, mark Complete with the date, update dashboard outcomes and the index, move the folder into `docs/milestones/archive/`, and repair links. Do not reimplement completed milestones unless explicitly asked.
+Follow `docs/milestones/README.md`: mark work Active, check tasks as evidence
+passes, and record commands/results. On completion, date scope/report, update
+indexes/dashboard, archive the folder, and repair links. Do not reimplement
+completed milestones unless explicitly asked. Keep generated audio and credentials
+out of Git. Small local timings require no speedup; training, cloud infrastructure,
+and Spiral integration remain deferred.

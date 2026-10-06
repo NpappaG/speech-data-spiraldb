@@ -1,6 +1,6 @@
 # M06: Package the cookbook
 
-- Status: Planned
+- Status: Active
 - Phase: 6 / Delivery
 - Dependencies: M05 saved measurements and interpretation; documentation maintained throughout M01–M05.
 - Blocks: Final cookbook delivery and stopping rule.
@@ -41,9 +41,9 @@ A clean tracked checkout in an isolated environment can install locked dependenc
 
 **Scope:**
 
-- [ ] 0.1 Consolidate README coverage: problem, pipeline, installation/Python requirements, source revision/license attribution, schema/filter/batch contracts, exact commands, output paths, overwrite behavior, and troubleshooting.
-- [ ] 0.2 Explain offline versus opt-in real-data tests and network/codec requirements. Document all three usage paths: metadata selection, lazy waveform batches, and measurements.
-- [ ] 0.3 Present actual saved measurements with variation, dataset size/selectivity, and cache policy; state that this is a small local Vortex cookbook, not a Spiral/GPU/training benchmark.
+- [x] 0.1 Consolidate README coverage: problem, pipeline, installation/Python requirements, source revision/license attribution, schema/filter/batch contracts, exact commands, output paths, overwrite behavior, and troubleshooting.
+- [x] 0.2 Explain offline versus opt-in real-data tests and network/codec requirements. Document all three usage paths: metadata selection, lazy waveform batches, and measurements.
+- [x] 0.3 Present actual saved measurements with variation, dataset size/selectivity, and cache policy; state that this is a small local Vortex cookbook, not a Spiral/GPU/training benchmark.
 
 **Exit criteria:** Every documented result points to saved evidence; commands and output contracts cover a complete workflow without guessing.
 
@@ -53,9 +53,9 @@ A clean tracked checkout in an isolated environment can install locked dependenc
 
 **Scope:**
 
-- [ ] 1.1 Review `docs/developer-experience.md` notes captured during implementation; attach versions, observed errors, working fixes, and concrete example/API/doc suggestions.
-- [ ] 1.2 Confirm downloaded/generated audio is ignored, report provenance is useful, and credentials/local sensitive details are absent from committed artifacts.
-- [ ] 1.3 Check milestone reports reflect delivered scope and deferred items; preserve the stopping rule: correct batches, saved honest measurements, and runnable documentation.
+- [x] 1.1 Review `docs/developer-experience.md` notes captured during implementation; attach versions, observed errors, working fixes, and concrete example/API/doc suggestions.
+- [x] 1.2 Confirm downloaded/generated audio is ignored, report provenance is useful, and credentials/local sensitive details are absent from committed artifacts.
+- [x] 1.3 Check milestone reports reflect delivered scope and deferred items; preserve the stopping rule: correct batches, saved honest measurements, and runnable documentation.
 
 **Exit criteria:** Feedback is evidence-backed, artifacts are suitable for sharing, and deferred ideas have not silently entered delivery scope.
 

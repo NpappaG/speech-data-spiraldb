@@ -10,20 +10,21 @@ A small local Vortex cookbook: filter speech metadata, decode selected audio, an
 
 ## Active milestones
 
+### M06 – Package the cookbook
+
+- Status: Active
+- Why: Make the documented experiment repeatable by another developer.
+- Progress: M05 passed; Beads 0–1 cookbook consolidation and scope closure in progress.
+- Next: Consolidate accumulated docs and verify a clean tracked checkout.
+- Risks/Blocks: Hidden local prerequisites; depends on M05.
+- See: [scope](M06_cookbook/scope.md)
+
 
 ## Planned milestones
 
 
 
 
-### M06 – Package the cookbook
-
-- Status: Planned
-- Why: Make the documented experiment repeatable by another developer.
-- Progress: Scope reviewed; no implementation.
-- Next: Consolidate accumulated docs and verify a clean tracked checkout.
-- Risks/Blocks: Hidden local prerequisites; depends on M05.
-- See: [scope](M06_cookbook/scope.md)
 
 ## Completed milestones
 

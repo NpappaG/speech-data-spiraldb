@@ -1,11 +1,11 @@
 # M06 Progress Report
 
-- Status: Planned
+- Status: Active
 - Last updated: 2026-10-06
 
 ## Delivery summary
 
-Implementation has not started. This report was initialized with the milestone tracking system; no milestone deliverables are claimed.
+Beads 0–1 complete: runnable commands/contracts/results and evidence-backed experience notes consolidated; sharing/ignore/link checks passed. Bead 2 clean-checkout acceptance is next.
 
 ## Ops notes
 
@@ -15,7 +15,11 @@ Implementation has not started. This report was initialized with the milestone t
 
 ## Tests run (exact commands)
 
-None run for this milestone. Record exact commands, outcomes, and relevant environment details here during execution.
+- Documentation relative-link validation: passed.
+- `git check-ignore data/clips.vortex`: ignored as required.
+- `git check-ignore results/measurements.json`: not ignored as required.
+- Result JSON audit: no credentials or unnecessary user-home paths found.
+- Clean-checkout acceptance remains pending.
 
 ## Decisions / notes
 
