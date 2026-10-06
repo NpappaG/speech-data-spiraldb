@@ -95,3 +95,13 @@ completed lock/install. No global Python or Poetry configuration was changed.
   Early-prefix acquisition examples need subprocess exit checks, not only a
   printed success message. No forced `os._exit`, sleep-based workaround, or
   third-party package patch is used.
+
+## Final acceptance
+
+Repaired tracked candidate `72fe87a` passed the full workflow in a fresh
+project environment with no copied data. Default tests passed with Hub/dataset
+offline modes and no data directory (61 passed, 4 explicitly opted-in checks
+skipped). Fresh 50/1,000-row acquisition, selection/batches, both benchmark
+invocations, and 65 integration/evidence checks exited normally under subprocess
+deadlines. Detailed acceptance commands and raw outputs are preserved with the
+[completed M06 report](milestones/archive/M06_cookbook/completion_report.md).

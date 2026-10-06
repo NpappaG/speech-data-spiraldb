@@ -6,9 +6,7 @@ The [bead design review](design_review.md) records the pre-implementation audit 
 
 ## Current milestones (planned or active)
 
-No milestone is Active; the next dependency-ready milestone is Planned.
-
-- M06 – Package the cookbook: Active — [scope](M06_cookbook/scope.md), [report](M06_cookbook/completion_report.md)
+No active or planned milestones remain in the delivery scope; M01–M06 are complete.
 
 ## Layout
 

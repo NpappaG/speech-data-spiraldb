@@ -13,3 +13,5 @@ Move completed milestone folders here with their specs, reports, and supporting 
 - M04 – Produce real PyTorch batches: Complete (2026-10-06) — [scope](M04_pytorch_batches/scope.md), [report](M04_pytorch_batches/completion_report.md). Both readers produce identical complete waveform batches: 178 clips in 12 batches, with correct zero padding and a two-clip final batch.
 
 - M05 – Measure without overstating results: Complete (2026-10-06) — [scope](M05_benchmark/scope.md), [report](M05_benchmark/completion_report.md). Saved two correctness-gated invocations with 20 raw trials each; metadata and remaining-stream differences are inconclusive, while first-batch and total times were lower for Vortex in these runs.
+
+- M06 – Package the cookbook: Complete (2026-10-06) — [scope](M06_cookbook/scope.md), [report](M06_cookbook/completion_report.md). Verified the complete documented workflow from repaired clean tracked candidate 72fe87a, including fresh acquisition, 65 checks, paired measurements, and normal subprocess exits.

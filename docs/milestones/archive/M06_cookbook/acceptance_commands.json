@@ -1,0 +1,103 @@
+{
+  "commit": "72fe87ab0d2a637bbea97fbbb91dd1f1d101ad5d",
+  "initial_tracked_checkout_clean": true,
+  "initial_data_absent": true,
+  "project_environment": "fresh .venv; locked dependencies; shared package-download cache only",
+  "source_cache": "fresh local data/hf-cache; no copied dataset",
+  "steps": [
+    {
+      "command": [
+        "poetry",
+        "run",
+        "python",
+        "prepare.py",
+        "--limit",
+        "50",
+        "--output-dir",
+        "data/dev50"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 5.587281084001006,
+      "stdout": "Streaming 50 rows at 71cacbfb7e2354c4226d01e70d77d5fca3d04ba1\nPublished 50 rows in data/dev50; both formats verified\n",
+      "stderr": "Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n"
+    },
+    {
+      "command": [
+        "poetry",
+        "run",
+        "python",
+        "prepare.py"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 15.158202915998118,
+      "stdout": "Streaming 1000 rows at 71cacbfb7e2354c4226d01e70d77d5fca3d04ba1\nPublished 1000 rows in data; both formats verified\n",
+      "stderr": "Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n"
+    },
+    {
+      "command": [
+        "poetry",
+        "run",
+        "python",
+        "loaders.py",
+        "--verify-batches"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 4.285903292002331,
+      "stdout": "Batch equivalence verified: {'selected_count': 178, 'batch_count': 12}\nSelected 178 clips; wrote data/selection.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "poetry",
+        "run",
+        "pytest",
+        "--real-data",
+        "-q"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 6.346720583002025,
+      "stdout": ".................................................................        [100%]\n65 passed in 4.91s\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "poetry",
+        "run",
+        "python",
+        "benchmark.py"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 17.58481591700547,
+      "stdout": "metadata: round 1, vortex, 178 clips\nmetadata: round 1, parquet, 178 clips\nmetadata: round 2, parquet, 178 clips\nmetadata: round 2, vortex, 178 clips\nmetadata: round 3, vortex, 178 clips\nmetadata: round 3, parquet, 178 clips\nmetadata: round 4, parquet, 178 clips\nmetadata: round 4, vortex, 178 clips\nmetadata: round 5, vortex, 178 clips\nmetadata: round 5, parquet, 178 clips\nwaveforms: round 1, vortex, 178 clips\nwaveforms: round 1, parquet, 178 clips\nwaveforms: round 2, parquet, 178 clips\nwaveforms: round 2, vortex, 178 clips\nwaveforms: round 3, vortex, 178 clips\nwaveforms: round 3, parquet, 178 clips\nwaveforms: round 4, parquet, 178 clips\nwaveforms: round 4, vortex, 178 clips\nwaveforms: round 5, vortex, 178 clips\nwaveforms: round 5, parquet, 178 clips\nSaved 20 raw trials to results/measurements.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "poetry",
+        "run",
+        "python",
+        "benchmark.py",
+        "--output",
+        "results/rerun.json"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 8.752634374999616,
+      "stdout": "metadata: round 1, vortex, 178 clips\nmetadata: round 1, parquet, 178 clips\nmetadata: round 2, parquet, 178 clips\nmetadata: round 2, vortex, 178 clips\nmetadata: round 3, vortex, 178 clips\nmetadata: round 3, parquet, 178 clips\nmetadata: round 4, parquet, 178 clips\nmetadata: round 4, vortex, 178 clips\nmetadata: round 5, vortex, 178 clips\nmetadata: round 5, parquet, 178 clips\nwaveforms: round 1, vortex, 178 clips\nwaveforms: round 1, parquet, 178 clips\nwaveforms: round 2, parquet, 178 clips\nwaveforms: round 2, vortex, 178 clips\nwaveforms: round 3, vortex, 178 clips\nwaveforms: round 3, parquet, 178 clips\nwaveforms: round 4, parquet, 178 clips\nwaveforms: round 4, vortex, 178 clips\nwaveforms: round 5, vortex, 178 clips\nwaveforms: round 5, parquet, 178 clips\nSaved 20 raw trials to results/rerun.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "poetry",
+        "run",
+        "pytest",
+        "--real-data",
+        "-q"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 15.047824875000515,
+      "stdout": ".................................................................        [100%]\n65 passed in 13.03s\n",
+      "stderr": ""
+    }
+  ],
+  "complete": true
+}

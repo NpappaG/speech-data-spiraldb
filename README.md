@@ -223,3 +223,13 @@ selectivity sweeps, and I/O counters are separate future experiments.
 
 See [developer experience](docs/developer-experience.md) for observed integration
 friction and concrete documentation/API suggestions.
+
+## Clean-checkout verification
+
+The complete workflow was verified from tracked candidate `72fe87a` in a fresh
+project environment, with no copied data/source cache. Default offline checks:
+61 passed, four explicitly opt-in tests skipped. Fresh acquisition, batch
+equivalence, both measurements, and final integration/evidence checks passed
+(65 tests). Every CLI subprocess exited normally under a deadline. See the
+[M06 acceptance report](docs/milestones/archive/M06_cookbook/completion_report.md)
+for exact commands, failed-attempt repairs, environment details, and raw evidence.
