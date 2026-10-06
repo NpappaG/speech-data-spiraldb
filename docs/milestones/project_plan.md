@@ -10,15 +10,6 @@ A small local Vortex cookbook: filter speech metadata, decode selected audio, an
 
 ## Active milestones
 
-### M05 – Measure without overstating results
-
-- Status: Active
-- Why: Collect honest timings after correctness passes.
-- Progress: M04 passed; Bead 0 fresh-reader timing contract in progress.
-- Next: Check timing arithmetic; run warm-ups, paired trials, and a rerun.
-- Risks/Blocks: Tiny-workload noise and OS caching; depends on M04.
-- See: [scope](M05_benchmark/scope.md)
-
 
 ## Planned milestones
 
@@ -36,6 +27,7 @@ A small local Vortex cookbook: filter speech metadata, decode selected audio, an
 
 ## Completed milestones
 
+- M05 – Measure without overstating results: Complete (2026-10-06). Saved two correctness-gated invocations with 20 raw trials each; metadata and remaining-stream differences are inconclusive, while first-batch and total times were lower for Vortex in these runs. [Scope](archive/M05_benchmark/scope.md) · [Report](archive/M05_benchmark/completion_report.md)
 - M04 – Produce real PyTorch batches: Complete (2026-10-06). Both readers produce identical complete waveform batches: 178 clips in 12 batches, with correct zero padding and a two-clip final batch. [Scope](archive/M04_pytorch_batches/scope.md) · [Report](archive/M04_pytorch_batches/completion_report.md)
 - M03 – Select a reproducible training subset: Complete (2026-10-06). Verified 178 selected clips (17.8%) against an independent metadata predicate, with native lazy scans and content-linked membership provenance. [Scope](archive/M03_subset_selection/scope.md) · [Report](archive/M03_subset_selection/completion_report.md)
 - M02 – Prepare one dataset in two formats: Complete (2026-10-06). Published and independently verified the pinned 1,000-row dataset pair; repeated 50-row preparations have identical logical contents. [Scope](archive/M02_dataset_preparation/scope.md) · [Report](archive/M02_dataset_preparation/completion_report.md)

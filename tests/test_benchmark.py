@@ -91,3 +91,36 @@ def test_default_paired_order_and_summary():
     assert result["waveforms"]["parquet"]["remaining_stream_clips_per_second"] is None
     with pytest.raises(ValueError, match="positive"):
         list(paired_order(0))
+
+
+@pytest.mark.real_data
+def test_saved_measurement_evidence():
+    import json
+    from pathlib import Path
+    for filename in ("measurements.json", "rerun.json"):
+        value = json.loads((Path("results") / filename).read_text())
+        assert value["schema_version"] == 1
+        assert value["settings"]["repetitions"] == 5
+        assert value["settings"]["fresh_reader_per_trial"] is True
+        assert value["settings"]["uses_selection_manifest"] is False
+        assert value["settings"]["reader_settings"]["vortex"]["segment_cache"] is False
+        assert value["environment"]["hardware"]["cpu"]
+        assert value["environment"]["code"]["source_sha256"]
+        assert len(value["trials"]) == 20
+        for path in ("metadata", "waveforms"):
+            trials = [trial for trial in value["trials"] if trial["path"] == path]
+            assert [(t["round"], t["position"], t["format"]) for t in trials] == list(paired_order(5))
+        for trial in value["trials"]:
+            assert trial["selected_count"] == value["workload"]["selected_count"]
+            assert sum(trial["emitted_scan_chunk_sizes"]) == trial["selected_count"]
+            assert max(trial["emitted_scan_chunk_sizes"]) <= value["settings"]["scan_batch_target"]
+            if trial["path"] == "metadata":
+                assert trial["selection_seconds"] > 0
+            else:
+                assert trial["total_seconds"] >= trial["first_batch_seconds"] > 0
+                assert trial["end_to_end_clips_per_second"] == pytest.approx(trial["selected_count"] / trial["total_seconds"])
+                assert trial["remaining_stream_clips_per_second"] == pytest.approx(
+                    (trial["selected_count"] - trial["first_batch_count"])
+                    / (trial["total_seconds"] - trial["first_batch_seconds"]))
+                assert trial["batch_count"] == 12
+        assert value["summary"] == summarize(value["trials"])

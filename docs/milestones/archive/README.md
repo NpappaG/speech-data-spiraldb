@@ -11,3 +11,5 @@ Move completed milestone folders here with their specs, reports, and supporting 
 - M03 – Select a reproducible training subset: Complete (2026-10-06) — [scope](M03_subset_selection/scope.md), [report](M03_subset_selection/completion_report.md). Verified 178 selected clips (17.8%) against an independent metadata predicate, with native lazy scans and content-linked membership provenance.
 
 - M04 – Produce real PyTorch batches: Complete (2026-10-06) — [scope](M04_pytorch_batches/scope.md), [report](M04_pytorch_batches/completion_report.md). Both readers produce identical complete waveform batches: 178 clips in 12 batches, with correct zero padding and a two-clip final batch.
+
+- M05 – Measure without overstating results: Complete (2026-10-06) — [scope](M05_benchmark/scope.md), [report](M05_benchmark/completion_report.md). Saved two correctness-gated invocations with 20 raw trials each; metadata and remaining-stream differences are inconclusive, while first-batch and total times were lower for Vortex in these runs.

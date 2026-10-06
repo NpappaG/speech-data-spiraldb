@@ -60,3 +60,16 @@ completed lock/install. No global Python or Poetry configuration was changed.
   example should show original sample lengths and zero padding explicitly.
 - Explicit generator closing allows cleanup on partial consumption. Invalid
   audio reports the clip ID; rejected corrupt bytes are never decoded.
+
+## M05: Measurement
+
+- The restricted runner allowed CPU architecture but blocked detailed `sysctl`
+  CPU/RAM reads. Approved inspection identified Apple M1 / 16 GiB; incomplete
+  preliminary evidence was replaced, rather than inventing hardware details.
+- PyTorch CPU intra-op threads are fixed at one for the comparison. Reader
+  threads, readahead differences, and actual native chunk sizes are recorded.
+  Chunk-size targets alone are not enough to describe the emitted stream.
+- Metadata and remaining-stream rates overlap in observed variation, despite
+  lower first-batch/total latency for Vortex in both invocations. Cookbook
+  examples should preserve raw trials and explain these timing boundaries, not
+  advertise one broad speedup number. Cache state remains OS-uncontrolled.

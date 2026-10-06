@@ -1,6 +1,6 @@
 # M05: Measure without overstating results
 
-- Status: Active
+- Status: Complete (2026-10-06)
 - Phase: 5 / Measurement
 - Dependencies: M04 passing offline and real-data correctness gates.
 - Blocks: M06 actual-results documentation.
@@ -55,9 +55,9 @@ Correctness gates pass. Five measured samples per format/path exist with positiv
 
 **Scope:**
 
-- [ ] 1.1 Run the offline/real-data gates and validate input hashes before timing; abort on failure. Record warm-up policy and perform one warm-up per format/path.
-- [ ] 1.2 Run five paired rounds for metadata and five for waveform iteration, alternating format order within each path. Record round/order/counts and release reader resources between trials.
-- [ ] 1.3 Persist raw per-trial metrics, medians and min/max, hardware/OS, Python/package/code version, file hashes/sizes, selected fraction, and actual scan/thread/batch/cache settings. Record dirty-worktree state when applicable.
+- [x] 1.1 Run the offline/real-data gates and validate input hashes before timing; abort on failure. Record warm-up policy and perform one warm-up per format/path.
+- [x] 1.2 Run five paired rounds for metadata and five for waveform iteration, alternating format order within each path. Record round/order/counts and release reader resources between trials.
+- [x] 1.3 Persist raw per-trial metrics, medians and min/max, hardware/OS, Python/package/code version, file hashes/sizes, selected fraction, and actual scan/thread/batch/cache settings. Record dirty-worktree state when applicable.
 
 **Exit criteria:** Results contain all measured samples and provenance; paired settings/counts match and no correctness or runtime failure is swallowed.
 
@@ -67,8 +67,8 @@ Correctness gates pass. Five measured samples per format/path exist with positiv
 
 **Scope:**
 
-- [ ] 2.1 Repeat the documented benchmark invocation into a separate result file; verify schema, counts, and metric validity, not equality of timing numbers.
-- [ ] 2.2 Compare selection latency, first-batch latency, total throughput, remaining-stream throughput, and variation separately. A difference smaller than observed variation is inconclusive.
-- [ ] 2.3 Explain that encoded-audio decoding is shared, file-layout defaults differ, and this local 1,000-row workload cannot establish production/GPU performance. Record ties/regressions; park larger-scale/selectivity/I/O experiments for later.
+- [x] 2.1 Repeat the documented benchmark invocation into a separate result file; verify schema, counts, and metric validity, not equality of timing numbers.
+- [x] 2.2 Compare selection latency, first-batch latency, total throughput, remaining-stream throughput, and variation separately. A difference smaller than observed variation is inconclusive.
+- [x] 2.3 Explain that encoded-audio decoding is shared, file-layout defaults differ, and this local 1,000-row workload cannot establish production/GPU performance. Record ties/regressions; park larger-scale/selectivity/I/O experiments for later.
 
 **Exit criteria:** The harness reruns successfully and the report supports only conclusions warranted by the saved evidence.
