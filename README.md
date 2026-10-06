@@ -51,7 +51,11 @@ poetry run pytest --real-data
 ```
 
 Preparation needs network access and SoundFile FLAC support (verified by offline
-tests). Default preparation streams the first 1,000 rows, never re-encodes the
+tests). Hugging Face `datasets` resolves the pinned, ordered source shard list;
+a synchronous PyArrow `ParquetFile` iterator reads encoded records in 64-row
+batches with threads/prebuffer disabled. The source iterator and file handles
+are closed even when the requested prefix stops partway through a shard. This
+avoids an observed async Arrow shutdown hang without decoding/re-encoding audio. Default preparation streams the first 1,000 rows, never re-encodes the
 audio, and writes `data/clips.vortex`, `data/clips.parquet` (Zstandard), and
 `data/preparation.json`. The manifest records ordered IDs, original audio hashes,
 source revision, schema, settings, package versions, file hashes/sizes, and elapsed

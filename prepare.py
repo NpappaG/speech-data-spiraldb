@@ -53,15 +53,20 @@ def build_table(records, limit):
         raise ValueError("limit must be positive")
     rows, seen = [], set()
     iterator = iter(records)
-    for index in range(limit):
-        try:
-            row = canonical_record(next(iterator), index)
-        except StopIteration as error:
-            raise ValueError(f"Source exhausted at {index}; requested {limit} rows") from error
-        if row["id"] in seen:
-            raise ValueError(f"Clip {row['id']}: duplicate ID")
-        seen.add(row["id"])
-        rows.append(row)
+    try:
+        for index in range(limit):
+            try:
+                row = canonical_record(next(iterator), index)
+            except StopIteration as error:
+                raise ValueError(f"Source exhausted at {index}; requested {limit} rows") from error
+            if row["id"] in seen:
+                raise ValueError(f"Clip {row['id']}: duplicate ID")
+            seen.add(row["id"])
+            rows.append(row)
+    finally:
+        close = getattr(iterator, "close", None)
+        if close is not None:
+            close()
     return pa.Table.from_pylist(rows, schema=SCHEMA)
 
 
@@ -94,7 +99,9 @@ def publish(table, out_dir, source, elapsed_start, overwrite=False):
                         packages=packages(), files=files,
                         settings=dict(vortex_writer="default", parquet_compression="zstd",
                                       parquet_row_group_size="default", word_count="len(text.split())",
-                                      duration_s="num_frames / sample_rate", audio_decode=False),
+                                      duration_s="num_frames / sample_rate", audio_decode=False,
+                                      source_pre_buffer=False, source_use_threads=False, source_scan_batch_size=64,
+                                      source_reader="ParquetFile over declared HF shards", source_iterator_closed=True),
                         preparation_seconds=time.perf_counter() - elapsed_start)
         # Invalidate old provenance before replacing any file. Publish manifest last;
         # interrupted publication cannot pass preflight as a complete generation.
@@ -106,26 +113,47 @@ def publish(table, out_dir, source, elapsed_start, overwrite=False):
     return manifest
 
 
+
+def stream_source_files(files, filesystem):
+    """Read declared source shards synchronously, preserving their order.
+
+    Dataset async scanners over Python remote file objects can hang at shutdown
+    after early termination. The ParquetFile API avoids that background scan;
+    acquisition is untimed, so reliability matters more than read parallelism.
+    """
+    for filename in files:
+        with filesystem.open(filename, "rb") as handle:
+            parquet = pq.ParquetFile(handle, pre_buffer=False)
+            try:
+                for batch in parquet.iter_batches(batch_size=64, use_threads=False):
+                    yield from batch.to_pylist()
+            finally:
+                parquet.close()
+
 def prepare(limit=1000, revision=None, output_dir="data", overwrite=False):
     if limit <= 0:
         raise ValueError("limit must be positive")
     directory = Path(output_dir)
     if not overwrite and any((directory / name).exists() for name in (*FILENAMES.values(), "preparation.json")):
         raise ValueError("Output artifacts exist; use --overwrite or a fresh --output-dir")
-    from datasets import Audio, load_dataset
-    from huggingface_hub import HfApi
+    from datasets import load_dataset_builder
+    from huggingface_hub import HfApi, HfFileSystem
     start = time.perf_counter()
     requested = revision or DEFAULT_REVISION
     resolved = HfApi(token=False).dataset_info(SOURCE, revision=requested).sha
     if not re.fullmatch(r"[0-9a-f]{40}", resolved):
         raise ValueError("Source did not resolve to an immutable commit")
     print(f"Streaming {limit} rows at {resolved}", flush=True)
-    source = load_dataset(SOURCE, CONFIG, split=SPLIT, revision=resolved, streaming=True,
-                          cache_dir=str(directory / "hf-cache"), token=False)
-    source = source.cast_column("audio", Audio(decode=False))
+    builder = load_dataset_builder(SOURCE, CONFIG, revision=resolved,
+                                   cache_dir=str(directory / "hf-cache"), token=False)
+    files = list(builder.config.data_files[SPLIT])
+    if not files or any(f"@{resolved}/" not in filename or not filename.endswith(".parquet") for filename in files):
+        raise ValueError("Expected declared Parquet shards pinned to the resolved revision")
+    filesystem = HfFileSystem(token=False, skip_instance_cache=True)
+    source = stream_source_files(files, filesystem)
     table = build_table(source, limit)
     return publish(table, directory, dict(dataset=SOURCE, config=CONFIG, split=SPLIT,
-                                         revision=resolved, limit=limit), start, overwrite)
+                                         revision=resolved, limit=limit, source_files=files), start, overwrite)
 
 
 def main():

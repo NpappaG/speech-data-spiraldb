@@ -23,7 +23,7 @@ FILENAMES = {"vortex": "clips.vortex", "parquet": "clips.parquet"}
 
 def packages():
     return {name: version(name) for name in (
-        "vortex-data", "pyarrow", "torch", "datasets", "soundfile", "numpy", "pytest"
+        "vortex-data", "pyarrow", "torch", "datasets", "huggingface-hub", "fsspec", "soundfile", "numpy", "pytest"
     )}
 
 

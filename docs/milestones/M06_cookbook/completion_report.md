@@ -5,7 +5,7 @@
 
 ## Delivery summary
 
-Beads 0–1 complete: runnable commands/contracts/results and evidence-backed experience notes consolidated; sharing/ignore/link checks passed. Bead 2 clean-checkout acceptance is next.
+Beads 0–1 complete: runnable commands/contracts/results and evidence-backed experience notes consolidated; sharing/ignore/link checks passed. Bead 2 is in progress: candidate 14b3978 installed in a fresh .venv; offline tests passed with no data present before or after. Acceptance found an async Arrow shutdown hang after publication. The source path was repaired with synchronous declared-shard reads and explicit cleanup; a bounded real CLI exited normally and matched the earlier prefix. The repaired tracked candidate will be retested cleanly before completion.
 
 ## Ops notes
 
@@ -19,7 +19,10 @@ Beads 0–1 complete: runnable commands/contracts/results and evidence-backed ex
 - `git check-ignore data/clips.vortex`: ignored as required.
 - `git check-ignore results/measurements.json`: not ignored as required.
 - Result JSON audit: no credentials or unnecessary user-home paths found.
-- Clean-checkout acceptance remains pending.
+- Clean candidate `14b3978` cloned with `git clone --no-hardlinks` to `/tmp/speech-slices-clean-14b3978`; no copied data/untracked files.
+- Fresh `poetry env use /opt/homebrew/bin/python3.11` and `poetry install --no-root`: passed using the lockfile and shared package-download cache.
+- `HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1 POETRY_CACHE_DIR=/tmp/speech-poetry-cache poetry run pytest -q`: 57 passed, 4 explicitly opt-in checks skipped; `test ! -e data` passed before and after.
+- Acquisition/real-data/benchmark acceptance is still in progress.
 
 ## Decisions / notes
 

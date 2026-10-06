@@ -73,3 +73,25 @@ completed lock/install. No global Python or Poetry configuration was changed.
   lower first-batch/total latency for Vortex in both invocations. Cookbook
   examples should preserve raw trials and explain these timing boundaries, not
   advertise one broad speedup number. Cache state remains OS-uncontrolled.
+
+## M06: Clean-checkout shutdown failure and repair
+
+- A clean sequential workflow exposed a real CLI shutdown hang after successful
+  50-row publication. macOS process sampling showed the main thread waiting in
+  `arrow::internal::ThreadPool::Shutdown` during native finalization. Related
+  early-termination behavior is documented in
+  [Arrow issue 45214](https://github.com/apache/arrow/issues/45214). This is a
+  related upstream report, not proof that every detail has the same cause.
+- Explicitly closing the source iterator and disabling prebuffer in the datasets
+  async scanner alone did not resolve the observed hang. The final acquisition
+  path uses `load_dataset_builder` for the pinned declared shard order and
+  synchronous `ParquetFile.iter_batches(use_threads=False)` over `HfFileSystem`.
+  Encoded rows bypass automatic audio decoding; file/iterator cleanup is explicit.
+- The repaired 50-row CLI exited with code 0 under a 120-second subprocess
+  deadline, and its complete logical table/audio hashes match the earlier prefix.
+  An offline subprocess regression checks partial native scan shutdown, and
+  source generators are tested for cleanup on both success and failure.
+- Documentation should distinguish publication success from command termination.
+  Early-prefix acquisition examples need subprocess exit checks, not only a
+  printed success message. No forced `os._exit`, sleep-based workaround, or
+  third-party package patch is used.

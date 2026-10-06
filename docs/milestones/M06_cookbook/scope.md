@@ -65,7 +65,7 @@ A clean tracked checkout in an isolated environment can install locked dependenc
 
 **Scope:**
 
-- [ ] 2.1 Use a clean checkout containing all intended tracked implementation files and lockfile, with a fresh project environment and no copied `data/`. Record the tested commit and environment/cache conditions; a workspace copy of untracked files is not sufficient.
+- [x] 2.1 Use a clean checkout containing all intended tracked implementation files and lockfile, with a fresh project environment and no copied `data/`. Record the tested commit and environment/cache conditions; a workspace copy of untracked files is not sufficient.
 - [ ] 2.2 Run documented install and offline tests first without data/network during the tests; then prepare the pinned 1,000 rows, run opt-in real-data verification, and run the benchmark with acquisition network access explicitly available.
 - [ ] 2.3 Record exact commands/results; repair failures and rerun affected steps. Apply completion/archive rules only when all acceptance criteria pass.
 
