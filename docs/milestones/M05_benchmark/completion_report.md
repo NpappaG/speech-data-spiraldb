@@ -1,11 +1,11 @@
 # M05 Progress Report
 
-- Status: Planned
+- Status: Active
 - Last updated: 2026-10-06
 
 ## Delivery summary
 
-Implementation has not started. This report was initialized with the milestone tracking system; no milestone deliverables are claimed.
+Bead 0 timing boundaries and deterministic arithmetic/order checks passed. Bead 1 paired execution is next.
 
 ## Ops notes
 
@@ -15,7 +15,9 @@ Implementation has not started. This report was initialized with the milestone t
 
 ## Tests run (exact commands)
 
-None run for this milestone. Record exact commands, outcomes, and relevant environment details here during execution.
+- `POETRY_CACHE_DIR=/tmp/speech-poetry-cache poetry run pytest -q`: 57 passed, 3 intentionally opt-in tests skipped.
+- `POETRY_CACHE_DIR=/tmp/speech-poetry-cache poetry run pytest --real-data -q`: 60 passed.
+- Timed paired execution remains pending.
 
 ## Decisions / notes
 

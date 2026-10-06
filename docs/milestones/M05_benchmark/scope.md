@@ -1,6 +1,6 @@
 # M05: Measure without overstating results
 
-- Status: Planned
+- Status: Active
 - Phase: 5 / Measurement
 - Dependencies: M04 passing offline and real-data correctness gates.
 - Blocks: M06 actual-results documentation.
@@ -43,9 +43,9 @@ Correctness gates pass. Five measured samples per format/path exist with positiv
 
 **Scope:**
 
-- [ ] 0.1 Add `benchmark.py` with explicit input/output paths, repetitions, and common settings; implement the timing boundaries and metrics above.
-- [ ] 0.2 Ensure each trial opens a fresh reader and consumes its entire stream; neither manifest membership nor metadata results feed timed audio scans. Exclude JSON writes and heavy correctness comparisons from timing; retain cheap count checks.
-- [ ] 0.3 Test metric arithmetic and trial ordering using a controlled clock/known iterator; test one-batch, empty-selection rejection, zero/nonpositive timing rejection, and incorrect output counts.
+- [x] 0.1 Add `benchmark.py` with explicit input/output paths, repetitions, and common settings; implement the timing boundaries and metrics above.
+- [x] 0.2 Ensure each trial opens a fresh reader and consumes its entire stream; neither manifest membership nor metadata results feed timed audio scans. Exclude JSON writes and heavy correctness comparisons from timing; retain cheap count checks.
+- [x] 0.3 Test metric arithmetic and trial ordering using a controlled clock/known iterator; test one-batch, empty-selection rejection, zero/nonpositive timing rejection, and incorrect output counts.
 
 **Exit criteria:** Deterministic checks establish timing boundaries, denominators, first-batch handling, and exactly five samples per format at the default setting.
 

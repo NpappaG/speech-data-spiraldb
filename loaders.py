@@ -4,7 +4,6 @@ import io
 import json
 from pathlib import Path
 
-import numpy as np
 import soundfile as sf
 import torch
 import pyarrow.dataset as ds
@@ -42,7 +41,7 @@ def _open_dataset(path, format_name):
     raise ValueError(f"Unknown format: {format_name}")
 
 
-def iter_records(format_name, data_dir="data", columns=None, scan_batch_size=SCAN_BATCH_SIZE, filtered=True):
+def iter_records(format_name, data_dir="data", columns=None, scan_batch_size=SCAN_BATCH_SIZE, filtered=True, chunk_sizes=None):
     """Yield native scan records. Call preflight explicitly before public use.
 
     At most one native Arrow chunk is converted to Python rows at a time.
@@ -62,6 +61,8 @@ def iter_records(format_name, data_dir="data", columns=None, scan_batch_size=SCA
     batches = iter(scanner.to_batches())
     try:
         for batch in batches:
+            if chunk_sizes is not None:
+                chunk_sizes.append(batch.num_rows)
             yield from batch.to_pylist()
     finally:
         close = getattr(batches, "close", None)
@@ -76,8 +77,8 @@ def select_metadata(format_name, data_dir="data", scan_batch_size=SCAN_BATCH_SIZ
     return list(iter_records(format_name, data_dir, METADATA_COLUMNS, scan_batch_size))
 
 
-def iter_audio_records(format_name, data_dir="data", scan_batch_size=SCAN_BATCH_SIZE):
-    return iter_records(format_name, data_dir, AUDIO_COLUMNS, scan_batch_size)
+def iter_audio_records(format_name, data_dir="data", scan_batch_size=SCAN_BATCH_SIZE, chunk_sizes=None):
+    return iter_records(format_name, data_dir, AUDIO_COLUMNS, scan_batch_size, chunk_sizes=chunk_sizes)
 
 
 def verify_membership(data_dir="data"):
@@ -188,8 +189,8 @@ def batch_records(records, batch_size=16):
         iterator = None
 
 
-def iter_batches(format_name, data_dir="data", batch_size=16, scan_batch_size=SCAN_BATCH_SIZE):
-    return batch_records(iter_audio_records(format_name, data_dir, scan_batch_size), batch_size)
+def iter_batches(format_name, data_dir="data", batch_size=16, scan_batch_size=SCAN_BATCH_SIZE, chunk_sizes=None):
+    return batch_records(iter_audio_records(format_name, data_dir, scan_batch_size, chunk_sizes), batch_size)
 
 
 def verify_batches(data_dir="data"):

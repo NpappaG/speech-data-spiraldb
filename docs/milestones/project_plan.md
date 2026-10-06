@@ -10,19 +10,20 @@ A small local Vortex cookbook: filter speech metadata, decode selected audio, an
 
 ## Active milestones
 
+### M05 – Measure without overstating results
+
+- Status: Active
+- Why: Collect honest timings after correctness passes.
+- Progress: M04 passed; Bead 0 fresh-reader timing contract in progress.
+- Next: Check timing arithmetic; run warm-ups, paired trials, and a rerun.
+- Risks/Blocks: Tiny-workload noise and OS caching; depends on M04.
+- See: [scope](M05_benchmark/scope.md)
+
 
 ## Planned milestones
 
 
 
-### M05 – Measure without overstating results
-
-- Status: Planned
-- Why: Collect honest timings after correctness passes.
-- Progress: Scope reviewed; no implementation.
-- Next: Check timing arithmetic; run warm-ups, paired trials, and a rerun.
-- Risks/Blocks: Tiny-workload noise and OS caching; depends on M04.
-- See: [scope](M05_benchmark/scope.md)
 
 ### M06 – Package the cookbook
 
