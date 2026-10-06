@@ -62,3 +62,39 @@ provenance is published last. Interrupted replacement leaves no valid manifest,
 and downstream preflight rejects mismatched hashes. Tests opted into with
 `--real-data` require the 1,000-row subset at `data/` and fail when it is absent.
 Changing `--revision` resolves and records a new immutable source commit.
+
+## Select clips
+
+```sh
+poetry run python loaders.py
+poetry run pytest --real-data
+```
+
+Both readers use native scans with inclusive `3 <= duration_s <= 10` and
+`word_count >= 5`. `data/selection.json` records independently verified ordered
+membership and source/file identity. It is provenance, not a precomputed shortcut
+for benchmarks or waveform loading.
+
+```python
+from common import preflight
+from loaders import select_metadata, iter_audio_records
+
+preflight("data")  # expensive hash validation, outside timing
+metadata = select_metadata("vortex", "data")  # audio column excluded
+records = iter_audio_records("parquet", "data")  # fresh filtered scan, lazy
+try:
+    first = next(records)
+finally:
+    records.close()
+```
+
+Metadata projection returns source index/ID, speaker, text, duration, and word
+count. Audio records return index/ID, transcript, sample rate/frame count, and
+encoded bytes. Scans target 64 rows per chunk, disable reader threads, disable
+Vortex segment caching, and disable PyArrow batch/fragment readahead. Vortex has
+no public explicit-close API in this version; generator completion/closing
+releases reader references. Always close iterators stopped early.
+
+Storage may still fetch or decompress chunks containing rejected rows. Avoiding
+waveform decoding is a logical guarantee; exact physical I/O savings are not
+measured here.

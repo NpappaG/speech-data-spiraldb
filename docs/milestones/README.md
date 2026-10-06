@@ -8,7 +8,6 @@ The [bead design review](design_review.md) records the pre-implementation audit 
 
 No milestone is Active; the next dependency-ready milestone is Planned.
 
-- M03 – Select a reproducible training subset: Planned — [scope](M03_subset_selection/scope.md), [report](M03_subset_selection/completion_report.md)
 - M04 – Produce real PyTorch batches: Planned — [scope](M04_pytorch_batches/scope.md), [report](M04_pytorch_batches/completion_report.md)
 - M05 – Measure without overstating results: Planned — [scope](M05_benchmark/scope.md), [report](M05_benchmark/completion_report.md)
 - M06 – Package the cookbook: Planned — [scope](M06_cookbook/scope.md), [report](M06_cookbook/completion_report.md)

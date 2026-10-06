@@ -37,3 +37,15 @@ completed lock/install. No global Python or Poetry configuration was changed.
   emitted by the Hub client; no credential is required for this workflow.
 - A useful acquisition example should distinguish disabling waveform decoding
   from avoiding all extra shard/network I/O, and preserve encoded bytes directly.
+
+## M03: Native selection
+
+- Both pinned readers accept the shared Arrow predicate, exclude null inputs, and
+  preserve order across filtered native chunks. The default selects 178/1,000 rows.
+- `vx.open(..., without_segment_cache=True)` explicitly disables retained segments.
+  PyArrow readahead is disabled separately; Vortex does not implement those
+  scanner knobs. Examples should document actual controls rather than claim
+  identical internal buffering across engines.
+- VortexFile has no public close/context-manager API in 0.87.0. Iterator cleanup
+  releases dataset/scanner references; an explicit close interface would make
+  early termination easier to explain and audit.
