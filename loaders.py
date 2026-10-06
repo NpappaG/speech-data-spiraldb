@@ -1,8 +1,12 @@
 """Native metadata selection and lazy encoded-audio iteration for both formats."""
 import argparse
+import io
 import json
 from pathlib import Path
 
+import numpy as np
+import soundfile as sf
+import torch
 import pyarrow.dataset as ds
 import vortex as vx
 
@@ -135,12 +139,103 @@ def validate_selection(data_dir="data"):
     return selection
 
 
+
+def decode_record(record):
+    """Return mono float32 samples; never resample or normalize source audio."""
+    clip_id = record.get("id", "<missing>")
+    try:
+        samples, rate = sf.read(io.BytesIO(record["audio_bytes"]), dtype="float32")
+        if samples.ndim != 1 or not len(samples):
+            raise ValueError("expected nonempty mono samples")
+        if rate != 16000 or record["sample_rate"] != rate:
+            raise ValueError("expected consistent 16 kHz sample rate")
+        if record["num_frames"] != len(samples):
+            raise ValueError("decoded frame count differs from metadata")
+        return samples
+    except (KeyError, TypeError, ValueError, RuntimeError) as error:
+        raise ValueError(f"Clip {clip_id}: {error}") from error
+
+
+def _collate(decoded):
+    lengths = torch.tensor([len(samples) for _, samples in decoded], dtype=torch.int64)
+    waveforms = torch.zeros((len(decoded), int(lengths.max())), dtype=torch.float32)
+    for index, (_, samples) in enumerate(decoded):
+        waveforms[index, :len(samples)] = torch.from_numpy(samples)
+    return dict(waveforms=waveforms, lengths=lengths,
+                transcripts=[record["text"] for record, _ in decoded],
+                ids=[record["id"] for record, _ in decoded], sample_rate=16000)
+
+
+def batch_records(records, batch_size=16):
+    """Collate across scanner chunks; retain only the current batch of samples."""
+    if batch_size <= 0:
+        raise ValueError("batch_size must be positive")
+    iterator = iter(records)
+    current = []
+    try:
+        for record in iterator:
+            current.append((record, decode_record(record)))
+            if len(current) == batch_size:
+                yield _collate(current)
+                current = []
+        if current:
+            yield _collate(current)
+    finally:
+        close = getattr(iterator, "close", None)
+        if close is not None:
+            close()
+        current.clear()
+        iterator = None
+
+
+def iter_batches(format_name, data_dir="data", batch_size=16, scan_batch_size=SCAN_BATCH_SIZE):
+    return batch_records(iter_audio_records(format_name, data_dir, scan_batch_size), batch_size)
+
+
+def verify_batches(data_dir="data"):
+    """Full untimed correctness gate with bounded waveform retention."""
+    _, expected = verify_membership(data_dir)
+    left = iter_batches("vortex", data_dir)
+    right = iter_batches("parquet", data_dir)
+    ids, count = [], 0
+    try:
+        while True:
+            a, b = next(left, None), next(right, None)
+            if a is None or b is None:
+                if a is not None or b is not None:
+                    raise ValueError("Different batch counts")
+                break
+            for key in ("ids", "transcripts", "sample_rate"):
+                if a[key] != b[key]:
+                    raise ValueError(f"Different batch {key}")
+            if not torch.equal(a["lengths"], b["lengths"]) or not torch.equal(a["waveforms"], b["waveforms"]):
+                raise ValueError("Different waveform values or lengths")
+            for batch in (a, b):
+                if batch["waveforms"].dtype != torch.float32 or batch["lengths"].dtype != torch.int64:
+                    raise ValueError("Invalid tensor dtype")
+                if batch["waveforms"].shape != (len(batch["ids"]), int(batch["lengths"].max())):
+                    raise ValueError("Invalid padded tensor shape")
+                for index, length in enumerate(batch["lengths"].tolist()):
+                    if torch.count_nonzero(batch["waveforms"][index, length:]):
+                        raise ValueError("Nonzero padding")
+            ids.extend(a["ids"])
+            count += 1
+    finally:
+        left.close()
+        right.close()
+    if ids != [row["id"] for row in expected] or count != (len(expected) + 15) // 16:
+        raise ValueError("Batch membership or count differs from reference")
+    return dict(selected_count=len(ids), batch_count=count)
+
 def main():
     parser = argparse.ArgumentParser(description="Verify both selections and save a provenance-only manifest")
     parser.add_argument("--data-dir", type=Path, default=Path("data"))
+    parser.add_argument("--verify-batches", action="store_true", help="Verify full PyTorch batch equivalence")
     args = parser.parse_args()
     try:
         result = save_selection(args.data_dir)
+        if args.verify_batches:
+            print(f"Batch equivalence verified: {verify_batches(args.data_dir)}")
     except (ValueError, OSError) as error:
         parser.exit(1, f"Selection failed: {error}\n")
     print(f"Selected {result['selected_count']} clips; wrote {args.data_dir / 'selection.json'}")

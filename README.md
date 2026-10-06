@@ -98,3 +98,33 @@ releases reader references. Always close iterators stopped early.
 Storage may still fetch or decompress chunks containing rejected rows. Avoiding
 waveform decoding is a logical guarantee; exact physical I/O savings are not
 measured here.
+
+## Produce PyTorch batches
+
+```sh
+poetry run python loaders.py --verify-batches
+```
+
+```python
+from common import preflight
+from loaders import iter_batches
+
+preflight("data")
+batches = iter_batches("vortex", "data", batch_size=16)
+try:
+    for batch in batches:
+        waveforms = batch["waveforms"]  # CPU float32 [B, maximum samples in batch]
+        lengths = batch["lengths"]      # int64 [B], original lengths in samples
+        # batch["ids"], batch["transcripts"], batch["sample_rate"] (16000)
+finally:
+    batches.close()
+```
+
+The shared decoder preserves mono float32 waveform samples and validates actual
+rate/frame counts against metadata. There is no resampling, channel mixing,
+normalization, augmentation, shuffle, or persistent decoded cache. Padding is
+zero; the final partial batch is retained. Empty selections yield zero batches;
+invalid audio fails with its clip ID. Batches span scanner chunk boundaries and
+decode only matching clips once per iteration. The selected 178 clips yield 12
+batches at size 16, ending with two clips. The same contract is checked against
+known samples and across both complete real-data readers.

@@ -14,14 +14,6 @@ A small local Vortex cookbook: filter speech metadata, decode selected audio, an
 ## Planned milestones
 
 
-### M04 – Produce real PyTorch batches
-
-- Status: Planned
-- Why: Deliver trustworthy waveform batches with bounded decoding.
-- Progress: Scope reviewed; no implementation.
-- Next: Test known signals, batching edges, and complete real-data equivalence.
-- Risks/Blocks: Shared bugs and eager loading; depends on M03.
-- See: [scope](M04_pytorch_batches/scope.md)
 
 ### M05 – Measure without overstating results
 
@@ -43,6 +35,7 @@ A small local Vortex cookbook: filter speech metadata, decode selected audio, an
 
 ## Completed milestones
 
+- M04 – Produce real PyTorch batches: Complete (2026-10-06). Both readers produce identical complete waveform batches: 178 clips in 12 batches, with correct zero padding and a two-clip final batch. [Scope](archive/M04_pytorch_batches/scope.md) · [Report](archive/M04_pytorch_batches/completion_report.md)
 - M03 – Select a reproducible training subset: Complete (2026-10-06). Verified 178 selected clips (17.8%) against an independent metadata predicate, with native lazy scans and content-linked membership provenance. [Scope](archive/M03_subset_selection/scope.md) · [Report](archive/M03_subset_selection/completion_report.md)
 - M02 – Prepare one dataset in two formats: Complete (2026-10-06). Published and independently verified the pinned 1,000-row dataset pair; repeated 50-row preparations have identical logical contents. [Scope](archive/M02_dataset_preparation/scope.md) · [Report](archive/M02_dataset_preparation/completion_report.md)
 - M01 – Bootstrap and smoke-test: Complete (2026-10-06). Locked the Python 3.11 environment and verified both native scanners plus known-sample WAV/FLAC decoding. [Scope](archive/M01_bootstrap/scope.md) · [Report](archive/M01_bootstrap/completion_report.md)

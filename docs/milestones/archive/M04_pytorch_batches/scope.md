@@ -1,6 +1,6 @@
 # M04: Produce real PyTorch batches
 
-- Status: Planned
+- Status: Complete (2026-10-06)
 - Phase: 4 / Loading
 - Dependencies: M03 lazy filtered record iterators.
 - Blocks: M05 correctness-gated measurement.
@@ -41,9 +41,9 @@ Known-signal tests pass, both formats yield equivalent complete real-data iterat
 
 **Scope:**
 
-- [ ] 0.1 Implement byte decoding and metadata validation; reject stereo, inconsistent rates/frame counts, empty/corrupt audio with clip-specific errors.
-- [ ] 0.2 Test generated PCM samples with independently known waveform values, rate, and lengths; use explicit documented tolerances only where needed.
-- [ ] 0.3 Verify real source FLAC support and expected sample counts without adding another decoder backend.
+- [x] 0.1 Implement byte decoding and metadata validation; reject stereo, inconsistent rates/frame counts, empty/corrupt audio with clip-specific errors.
+- [x] 0.2 Test generated PCM samples with independently known waveform values, rate, and lengths; use explicit documented tolerances only where needed.
+- [x] 0.3 Verify real source FLAC support and expected sample counts without adding another decoder backend.
 
 **Exit criteria:** Known samples decode correctly, real FLAC is supported, and invalid payloads/metadata fail with useful errors.
 
@@ -53,9 +53,9 @@ Known-signal tests pass, both formats yield equivalent complete real-data iterat
 
 **Scope:**
 
-- [ ] 1.1 Feed either reader into the same decoder/collator; implement the specified contract and default batch size 16.
-- [ ] 1.2 Test 0, 1, 16, and 17 selected clips, unequal waveform lengths, different scanner chunk sizes, zero padding, source order, and invalid batch size.
-- [ ] 1.3 Instrument decode calls: each selected ID is decoded once, rejected IDs never are, and the first batch is yielded before all selected clips are decoded. Close reader resources when iteration ends or is stopped early.
+- [x] 1.1 Feed either reader into the same decoder/collator; implement the specified contract and default batch size 16.
+- [x] 1.2 Test 0, 1, 16, and 17 selected clips, unequal waveform lengths, different scanner chunk sizes, zero padding, source order, and invalid batch size.
+- [x] 1.3 Instrument decode calls: each selected ID is decoded once, rejected IDs never are, and the first batch is yielded before all selected clips are decoded. Close reader resources when iteration ends or is stopped early.
 
 **Exit criteria:** Batch output is independent of storage chunking, has a final partial batch, and remains lazy with deterministic decoder counts.
 
@@ -65,8 +65,8 @@ Known-signal tests pass, both formats yield equivalent complete real-data iterat
 
 **Scope:**
 
-- [ ] 2.1 Iterate both formats completely, comparing each batch’s IDs, transcripts, lengths, sample rate, shapes, padding, and waveform samples without retaining all batches.
-- [ ] 2.2 Verify concatenated membership against M03’s independently checked selection; check total clips and expected batch count.
-- [ ] 2.3 Run offline and opt-in real-data tests; document the batch API/example and actual validation commands/results.
+- [x] 2.1 Iterate both formats completely, comparing each batch’s IDs, transcripts, lengths, sample rate, shapes, padding, and waveform samples without retaining all batches.
+- [x] 2.2 Verify concatenated membership against M03’s independently checked selection; check total clips and expected batch count.
+- [x] 2.3 Run offline and opt-in real-data tests; document the batch API/example and actual validation commands/results.
 
 **Exit criteria:** Both complete real iterations match the independent membership and shared waveform contract; correctness tests are ready to gate M05.

@@ -49,3 +49,14 @@ completed lock/install. No global Python or Poetry configuration was changed.
 - VortexFile has no public close/context-manager API in 0.87.0. Iterator cleanup
   releases dataset/scanner references; an explicit close interface would make
   early termination easier to explain and audit.
+
+## M04: Audio and PyTorch
+
+- SoundFile gives deterministic float32 samples from preserved FLAC bytes; exact
+  cross-format equality passes. Generated PCM samples provide an independent
+  decoder oracle, so two identical buggy paths cannot silently pass.
+- Storage scan chunks and PyTorch batches are different units. Collation across
+  chunk boundaries works with native scan targets 1, 3, and 64 rows. A concrete
+  example should show original sample lengths and zero padding explicitly.
+- Explicit generator closing allows cleanup on partial consumption. Invalid
+  audio reports the clip ID; rejected corrupt bytes are never decoded.
