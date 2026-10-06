@@ -1,0 +1,107 @@
+# Developer Experience
+
+## M01: Environment setup (2026-10-06)
+
+- The inherited pyenv Python 3.13.5 and available pyenv Python 3.12.7 emit
+  `hashlib` errors for missing BLAKE2 implementations. A healthy Homebrew
+  Python 3.11.15 passes the same hashing check. The project selects that
+  interpreter explicitly without altering global Python configuration.
+- Poetry 1.5.1 is already installed. The project uses `poetry install --no-root`
+  because its entry points are repository scripts rather than an installable package.
+- macOS 26.6.2 on Apple Silicon arm64 is the initial verification platform.
+- Source acquisition will use Hugging Face `datasets`; file reads use Vortex and
+  PyArrow directly. This keeps source integration separate from format timing.
+
+Verified versions: Vortex 0.87.0, PyArrow 25.0.1, torch 2.14.1,
+datasets 5.1.0, SoundFile 0.13.1, NumPy 2.4.6, pytest 9.1.1.
+
+Both readers support Dataset scanners with native filters/projections,
+`batch_size=2` and `use_threads=False` in the feasibility test. Vortex exposes
+Arrow string/binary view representations; normalization to the canonical schema
+is necessary for logical table comparisons. A cookbook example should show
+that conversion explicitly. WAV and FLAC decode to the expected float32 samples.
+
+Sandbox DNS initially prevented dependency downloads; approved network escalation
+completed lock/install. No global Python or Poetry configuration was changed.
+
+## M02: Source and preparation
+
+- `datasets` 5.1.0 supports `load_dataset(..., streaming=True, revision=..., token=False)`
+  with `cast_column("audio", Audio(decode=False))`. The pinned source returns actual
+  encoded bytes alongside a path; there is no need to decode through TorchCodec or
+  trust stale source-machine paths. Three source records verified mono 16 kHz FLAC
+  headers, including clip `374-180298-0000` (232,480 frames).
+- The resolved immutable revision is
+  `71cacbfb7e2354c4226d01e70d77d5fca3d04ba1` (`clean` / `train.100`).
+- Hub access is public and explicitly unauthenticated. A rate-limit suggestion is
+  emitted by the Hub client; no credential is required for this workflow.
+- A useful acquisition example should distinguish disabling waveform decoding
+  from avoiding all extra shard/network I/O, and preserve encoded bytes directly.
+
+## M03: Native selection
+
+- Both pinned readers accept the shared Arrow predicate, exclude null inputs, and
+  preserve order across filtered native chunks. The default selects 178/1,000 rows.
+- `vx.open(..., without_segment_cache=True)` explicitly disables retained segments.
+  PyArrow readahead is disabled separately; Vortex does not implement those
+  scanner knobs. Examples should document actual controls rather than claim
+  identical internal buffering across engines.
+- VortexFile has no public close/context-manager API in 0.87.0. Iterator cleanup
+  releases dataset/scanner references; an explicit close interface would make
+  early termination easier to explain and audit.
+
+## M04: Audio and PyTorch
+
+- SoundFile gives deterministic float32 samples from preserved FLAC bytes; exact
+  cross-format equality passes. Generated PCM samples provide an independent
+  decoder oracle, so two identical buggy paths cannot silently pass.
+- Storage scan chunks and PyTorch batches are different units. Collation across
+  chunk boundaries works with native scan targets 1, 3, and 64 rows. A concrete
+  example should show original sample lengths and zero padding explicitly.
+- Explicit generator closing allows cleanup on partial consumption. Invalid
+  audio reports the clip ID; rejected corrupt bytes are never decoded.
+
+## M05: Measurement
+
+- The restricted runner allowed CPU architecture but blocked detailed `sysctl`
+  CPU/RAM reads. Approved inspection identified Apple M1 / 16 GiB; incomplete
+  preliminary evidence was replaced, rather than inventing hardware details.
+- PyTorch CPU intra-op threads are fixed at one for the comparison. Reader
+  threads, readahead differences, and actual native chunk sizes are recorded.
+  Chunk-size targets alone are not enough to describe the emitted stream.
+- Metadata and remaining-stream rates overlap in observed variation, despite
+  lower first-batch/total latency for Vortex in both invocations. Cookbook
+  examples should preserve raw trials and explain these timing boundaries, not
+  advertise one broad speedup number. Cache state remains OS-uncontrolled.
+
+## M06: Clean-checkout shutdown failure and repair
+
+- A clean sequential workflow exposed a real CLI shutdown hang after successful
+  50-row publication. macOS process sampling showed the main thread waiting in
+  `arrow::internal::ThreadPool::Shutdown` during native finalization. Related
+  early-termination behavior is documented in
+  [Arrow issue 45214](https://github.com/apache/arrow/issues/45214). This is a
+  related upstream report, not proof that every detail has the same cause.
+- Explicitly closing the source iterator and disabling prebuffer in the datasets
+  async scanner alone did not resolve the observed hang. The final acquisition
+  path uses `load_dataset_builder` for the pinned declared shard order and
+  synchronous `ParquetFile.iter_batches(use_threads=False)` over `HfFileSystem`.
+  Encoded rows bypass automatic audio decoding; file/iterator cleanup is explicit.
+- The repaired 50-row CLI exited with code 0 under a 120-second subprocess
+  deadline, and its complete logical table/audio hashes match the earlier prefix.
+  An offline subprocess regression checks partial native scan shutdown, and
+  source generators are tested for cleanup on both success and failure.
+- Documentation should distinguish publication success from command termination.
+  Early-prefix acquisition examples need subprocess exit checks, not only a
+  printed success message. No forced `os._exit`, sleep-based workaround, or
+  third-party package patch is used.
+
+## Final acceptance
+
+Repaired tracked candidate `72fe87a` passed the full workflow in a fresh
+project environment with no copied data. Default tests passed with Hub/dataset
+offline modes and no data directory (61 passed, 4 explicitly opted-in checks
+skipped). Fresh 50/1,000-row acquisition, selection/batches, both benchmark
+invocations, and 65 integration/evidence checks exited normally under subprocess
+deadlines. Detailed acceptance commands and raw outputs are preserved with the
+[completed M06 report](milestones/archive/M06_cookbook/completion_report.md).

@@ -1,0 +1,763 @@
+{
+  "schema_version": 1,
+  "workload": {
+    "source": {
+      "dataset": "openslr/librispeech_asr",
+      "config": "clean",
+      "split": "train.100",
+      "revision": "71cacbfb7e2354c4226d01e70d77d5fca3d04ba1",
+      "limit": 1000
+    },
+    "row_count": 1000,
+    "selected_count": 178,
+    "selected_fraction": 0.178,
+    "criteria": {
+      "duration_s_min": 3,
+      "duration_s_max": 10,
+      "word_count_min": 5,
+      "bounds": "inclusive"
+    },
+    "files": {
+      "vortex": {
+        "name": "clips.vortex",
+        "size_bytes": 226064756,
+        "sha256": "38fb688f62528746434b2b8b596489507d07eb81cc3dcea1e6b343d9454d1335"
+      },
+      "parquet": {
+        "name": "clips.parquet",
+        "size_bytes": 217925013,
+        "sha256": "0e31ffd93092adea863815edb8475880a83ddc56db48bbf5ba8b5703a8144320"
+      }
+    },
+    "preparation_settings": {
+      "vortex_writer": "default",
+      "parquet_compression": "zstd",
+      "parquet_row_group_size": "default",
+      "word_count": "len(text.split())",
+      "duration_s": "num_frames / sample_rate",
+      "audio_decode": false
+    }
+  },
+  "environment": {
+    "os": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "cpu": "Apple M1",
+    "hardware": {
+      "cpu": "Apple M1",
+      "logical_cpus": 8,
+      "memory_bytes": 17179869184
+    },
+    "python": "3.11.15",
+    "packages": {
+      "vortex-data": "0.87.0",
+      "pyarrow": "25.0.1",
+      "torch": "2.14.1",
+      "datasets": "5.1.0",
+      "soundfile": "0.13.1",
+      "numpy": "2.4.6",
+      "pytest": "9.1.1"
+    },
+    "code": {
+      "commit": "39e56808e9d281f95abf5e328bebd95d1f5189f8",
+      "dirty": true,
+      "source_sha256": {
+        "common.py": "40255dc38a14f83a1fc17f4ad2f60b520c529e12a513c3ca77400f1b3da5c5fe",
+        "prepare.py": "d1eb973993e9229d75f53668dfee4124ded3d59e6b3123e71bfb226163167685",
+        "loaders.py": "fa61f95043d652ef2f3b94e2ee2114934a94cec1339c4d986c1d54876bd6e714",
+        "benchmark.py": "c513b66230d59f3f123eea1bd654bce084f1e34257ecc7847ca5ed0308823c0e"
+      }
+    },
+    "torch_threads": 1,
+    "torch_interop_threads": 8
+  },
+  "settings": {
+    "repetitions": 5,
+    "waveform_batch_size": 16,
+    "scan_batch_target": 64,
+    "reader_settings": {
+      "vortex": {
+        "use_threads": false,
+        "segment_cache": false,
+        "readahead": "not implemented",
+        "mmap": "no public setting"
+      },
+      "parquet": {
+        "use_threads": false,
+        "batch_readahead": 0,
+        "fragment_readahead": 0,
+        "mmap": false
+      }
+    },
+    "shuffle": false,
+    "loader_processes": 1,
+    "projections": {
+      "metadata": [
+        "row_index",
+        "id",
+        "speaker_id",
+        "text",
+        "duration_s",
+        "word_count"
+      ],
+      "waveforms": [
+        "row_index",
+        "id",
+        "text",
+        "sample_rate",
+        "num_frames",
+        "audio_bytes"
+      ]
+    },
+    "cache_policy": "One warm-up per format/path; OS cache uncontrolled; Vortex segment cache disabled",
+    "fresh_reader_per_trial": true,
+    "uses_selection_manifest": false
+  },
+  "timing_boundaries": {
+    "metadata": "Before open/scanner setup through full projected metadata consumption and iterator close",
+    "first_batch": "Before fresh open through first decoded/padded waveform batch yield; no metadata pre-pass",
+    "total": "Before fresh open through complete waveform iterator exhaustion and close",
+    "remaining": "Clips after first batch divided by seconds from first yield through exhaustion/close; null if none",
+    "excluded": "Imports, hash validation, correctness gate, environment discovery, downloading, preparation, JSON writes"
+  },
+  "correctness_gate": {
+    "selected_count": 178,
+    "batch_count": 12
+  },
+  "trials": [
+    {
+      "selected_count": 178,
+      "selection_seconds": 0.0021472080043167807,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "metadata",
+      "format": "vortex",
+      "round": 1,
+      "position": 1
+    },
+    {
+      "selected_count": 178,
+      "selection_seconds": 0.003369083999132272,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "metadata",
+      "format": "parquet",
+      "round": 1,
+      "position": 2
+    },
+    {
+      "selected_count": 178,
+      "selection_seconds": 0.0025651660034782253,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "metadata",
+      "format": "parquet",
+      "round": 2,
+      "position": 1
+    },
+    {
+      "selected_count": 178,
+      "selection_seconds": 0.0030180419998941943,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "metadata",
+      "format": "vortex",
+      "round": 2,
+      "position": 2
+    },
+    {
+      "selected_count": 178,
+      "selection_seconds": 0.003479125000012573,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "metadata",
+      "format": "vortex",
+      "round": 3,
+      "position": 1
+    },
+    {
+      "selected_count": 178,
+      "selection_seconds": 0.003910332998202648,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "metadata",
+      "format": "parquet",
+      "round": 3,
+      "position": 2
+    },
+    {
+      "selected_count": 178,
+      "selection_seconds": 0.003309250001620967,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "metadata",
+      "format": "parquet",
+      "round": 4,
+      "position": 1
+    },
+    {
+      "selected_count": 178,
+      "selection_seconds": 0.002926665998529643,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "metadata",
+      "format": "vortex",
+      "round": 4,
+      "position": 2
+    },
+    {
+      "selected_count": 178,
+      "selection_seconds": 0.0030640000040875748,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "metadata",
+      "format": "vortex",
+      "round": 5,
+      "position": 1
+    },
+    {
+      "selected_count": 178,
+      "selection_seconds": 0.0025378749996889383,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "metadata",
+      "format": "parquet",
+      "round": 5,
+      "position": 2
+    },
+    {
+      "selected_count": 178,
+      "batch_count": 12,
+      "first_batch_count": 16,
+      "first_batch_seconds": 0.062029499997152016,
+      "total_seconds": 0.2814194579987088,
+      "end_to_end_clips_per_second": 632.5077919836541,
+      "remaining_stream_clips_per_second": 738.4111901733006,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "waveforms",
+      "format": "vortex",
+      "round": 1,
+      "position": 1
+    },
+    {
+      "selected_count": 178,
+      "batch_count": 12,
+      "first_batch_count": 16,
+      "first_batch_seconds": 0.13205112500145333,
+      "total_seconds": 0.3623662910031271,
+      "end_to_end_clips_per_second": 491.21566883952767,
+      "remaining_stream_clips_per_second": 703.383988177412,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "waveforms",
+      "format": "parquet",
+      "round": 1,
+      "position": 2
+    },
+    {
+      "selected_count": 178,
+      "batch_count": 12,
+      "first_batch_count": 16,
+      "first_batch_seconds": 0.1260221670017927,
+      "total_seconds": 0.3525298750028014,
+      "end_to_end_clips_per_second": 504.9217459898555,
+      "remaining_stream_clips_per_second": 715.2074489194803,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "waveforms",
+      "format": "parquet",
+      "round": 2,
+      "position": 1
+    },
+    {
+      "selected_count": 178,
+      "batch_count": 12,
+      "first_batch_count": 16,
+      "first_batch_seconds": 0.060047999999369495,
+      "total_seconds": 0.27779170899884775,
+      "end_to_end_clips_per_second": 640.7678639564376,
+      "remaining_stream_clips_per_second": 743.993940143585,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "waveforms",
+      "format": "vortex",
+      "round": 2,
+      "position": 2
+    },
+    {
+      "selected_count": 178,
+      "batch_count": 12,
+      "first_batch_count": 16,
+      "first_batch_seconds": 0.06058295799448388,
+      "total_seconds": 0.28538799999660114,
+      "end_to_end_clips_per_second": 623.7122794305294,
+      "remaining_stream_clips_per_second": 720.6244066290749,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "waveforms",
+      "format": "vortex",
+      "round": 3,
+      "position": 1
+    },
+    {
+      "selected_count": 178,
+      "batch_count": 12,
+      "first_batch_count": 16,
+      "first_batch_seconds": 0.15611991599871544,
+      "total_seconds": 0.4035440000006929,
+      "end_to_end_clips_per_second": 441.0919255389607,
+      "remaining_stream_clips_per_second": 654.7462857282126,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "waveforms",
+      "format": "parquet",
+      "round": 3,
+      "position": 2
+    },
+    {
+      "selected_count": 178,
+      "batch_count": 12,
+      "first_batch_count": 16,
+      "first_batch_seconds": 0.20316791600635042,
+      "total_seconds": 0.4224144160034484,
+      "end_to_end_clips_per_second": 421.38713371597356,
+      "remaining_stream_clips_per_second": 738.8943495204908,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "waveforms",
+      "format": "parquet",
+      "round": 4,
+      "position": 1
+    },
+    {
+      "selected_count": 178,
+      "batch_count": 12,
+      "first_batch_count": 16,
+      "first_batch_seconds": 0.06493370799580589,
+      "total_seconds": 0.2932434579997789,
+      "end_to_end_clips_per_second": 607.0041637557493,
+      "remaining_stream_clips_per_second": 709.562337995556,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "waveforms",
+      "format": "vortex",
+      "round": 4,
+      "position": 2
+    },
+    {
+      "selected_count": 178,
+      "batch_count": 12,
+      "first_batch_count": 16,
+      "first_batch_seconds": 0.06022083300194936,
+      "total_seconds": 0.28215616600209614,
+      "end_to_end_clips_per_second": 630.8563180528815,
+      "remaining_stream_clips_per_second": 729.9423566769012,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "waveforms",
+      "format": "vortex",
+      "round": 5,
+      "position": 1
+    },
+    {
+      "selected_count": 178,
+      "batch_count": 12,
+      "first_batch_count": 16,
+      "first_batch_seconds": 0.1496800409950083,
+      "total_seconds": 0.3729848749935627,
+      "end_to_end_clips_per_second": 477.23114778601166,
+      "remaining_stream_clips_per_second": 725.4657102543904,
+      "emitted_scan_chunk_sizes": [
+        7,
+        8,
+        8,
+        6,
+        7,
+        15,
+        15,
+        7,
+        6,
+        14,
+        37,
+        17,
+        6,
+        13,
+        4,
+        8
+      ],
+      "path": "waveforms",
+      "format": "parquet",
+      "round": 5,
+      "position": 2
+    }
+  ],
+  "summary": {
+    "metadata": {
+      "vortex": {
+        "selection_seconds": {
+          "median": 0.0030180419998941943,
+          "min": 0.0021472080043167807,
+          "max": 0.003479125000012573
+        }
+      },
+      "parquet": {
+        "selection_seconds": {
+          "median": 0.003309250001620967,
+          "min": 0.0025378749996889383,
+          "max": 0.003910332998202648
+        }
+      }
+    },
+    "waveforms": {
+      "vortex": {
+        "first_batch_seconds": {
+          "median": 0.06058295799448388,
+          "min": 0.060047999999369495,
+          "max": 0.06493370799580589
+        },
+        "total_seconds": {
+          "median": 0.28215616600209614,
+          "min": 0.27779170899884775,
+          "max": 0.2932434579997789
+        },
+        "end_to_end_clips_per_second": {
+          "median": 630.8563180528815,
+          "min": 607.0041637557493,
+          "max": 640.7678639564376
+        },
+        "remaining_stream_clips_per_second": {
+          "median": 729.9423566769012,
+          "min": 709.562337995556,
+          "max": 743.993940143585
+        }
+      },
+      "parquet": {
+        "first_batch_seconds": {
+          "median": 0.1496800409950083,
+          "min": 0.1260221670017927,
+          "max": 0.20316791600635042
+        },
+        "total_seconds": {
+          "median": 0.3729848749935627,
+          "min": 0.3525298750028014,
+          "max": 0.4224144160034484
+        },
+        "end_to_end_clips_per_second": {
+          "median": 477.23114778601166,
+          "min": 421.38713371597356,
+          "max": 504.9217459898555
+        },
+        "remaining_stream_clips_per_second": {
+          "median": 715.2074489194803,
+          "min": 654.7462857282126,
+          "max": 738.8943495204908
+        }
+      }
+    }
+  },
+  "interpretation": "Small local workload; report min/max variation, ties and regressions. No production or GPU claims."
+}
