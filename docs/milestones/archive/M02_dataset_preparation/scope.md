@@ -1,6 +1,6 @@
 # M02: Prepare one dataset in two formats
 
-- Status: Planned
+- Status: Complete (2026-10-06)
 - Phase: 2 / Data
 - Dependencies: M01 reader and audio feasibility checks.
 - Blocks: M03 real-data selection and later benchmark provenance.
@@ -42,9 +42,9 @@ A repeatable command produces the pinned 1,000-row subset. Both outputs match th
 
 **Scope:**
 
-- [ ] 0.1 Add `prepare.py` arguments for revision, positive row limit, and output directory; document defaults, network requirements, and overwrite behavior.
-- [ ] 0.2 Resolve/persist an immutable source revision; verify config/split and encoded-byte access on a few streaming records. Handle verified accessible paths only when bytes are absent; otherwise fail clearly.
-- [ ] 0.3 Encode the schema and validation rules above. Test known header-derived durations, whitespace word counts, invalid records, and duplicate IDs using offline fixtures.
+- [x] 0.1 Add `prepare.py` arguments for revision, positive row limit, and output directory; document defaults, network requirements, and overwrite behavior.
+- [x] 0.2 Resolve/persist an immutable source revision; verify config/split and encoded-byte access on a few streaming records. Handle verified accessible paths only when bytes are absent; otherwise fail clearly.
+- [x] 0.3 Encode the schema and validation rules above. Test known header-derived durations, whitespace word counts, invalid records, and duplicate IDs using offline fixtures.
 
 **Exit criteria:** A few real records can be consumed without automatic waveform decoding; schema/rule tests pass and the immutable revision is recorded.
 
@@ -54,9 +54,9 @@ A repeatable command produces the pinned 1,000-row subset. Both outputs match th
 
 **Scope:**
 
-- [ ] 1.1 Consume the requested prefix in source order; fail if fewer than N records exist. Preserve bytes and assign contiguous row indices; first exercise 50 rows.
-- [ ] 1.2 Write both formats from the single validated table into staging files. Read each back and compare every logical field and audio payload to the canonical source table.
-- [ ] 1.3 Publish validated outputs and `data/preparation.json` last, including schema version, ordered IDs/audio hashes, source/settings, package versions, file hashes/sizes, and preparation timing. Reject existing outputs unless overwrite is explicit; invalidate the old manifest before overwriting so partial publication cannot appear valid.
+- [x] 1.1 Consume the requested prefix in source order; fail if fewer than N records exist. Preserve bytes and assign contiguous row indices; first exercise 50 rows.
+- [x] 1.2 Write both formats from the single validated table into staging files. Read each back and compare every logical field and audio payload to the canonical source table.
+- [x] 1.3 Publish validated outputs and `data/preparation.json` last, including schema version, ordered IDs/audio hashes, source/settings, package versions, file hashes/sizes, and preparation timing. Reject existing outputs unless overwrite is explicit; invalidate the old manifest before overwriting so partial publication cannot appear valid.
 
 **Exit criteria:** The 50-row pair matches the original table; failed/interrupted preparation cannot pass as a valid pair. No generated data is tracked.
 
@@ -66,8 +66,8 @@ A repeatable command produces the pinned 1,000-row subset. Both outputs match th
 
 **Scope:**
 
-- [ ] 2.1 Add opt-in real-data verification that checks the manifest, both outputs, ordered metadata, and audio hashes. Missing data yields an explicit setup error when opted in, not a passing skip.
-- [ ] 2.2 Repeat the 50-row preparation at the same revision in a fresh output directory and compare logical rows/audio hashes; do not require byte-identical container files or identical elapsed times.
-- [ ] 2.3 Prepare and verify the 1,000-row delivery subset; update exact README commands and capture acquisition/codec friction as it occurs.
+- [x] 2.1 Add opt-in real-data verification that checks the manifest, both outputs, ordered metadata, and audio hashes. Missing data yields an explicit setup error when opted in, not a passing skip.
+- [x] 2.2 Repeat the 50-row preparation at the same revision in a fresh output directory and compare logical rows/audio hashes; do not require byte-identical container files or identical elapsed times.
+- [x] 2.3 Prepare and verify the 1,000-row delivery subset; update exact README commands and capture acquisition/codec friction as it occurs.
 
 **Exit criteria:** Repeated prefixes have identical logical contents; the 1,000-row pair and manifest pass real-data verification.

@@ -11,14 +11,7 @@ A small local Vortex cookbook: filter speech metadata, decode selected audio, an
 ## Active milestones
 
 
-### M02 – Prepare one dataset in two formats
-
-- Status: Planned
-- Why: Establish equivalent, identifiable source artifacts.
-- Progress: Scope reviewed; no implementation.
-- Next: Verify encoded-byte access, then publish the 50/1,000-row pairs.
-- Risks/Blocks: Source access, stale outputs; depends on M01.
-- See: [scope](M02_dataset_preparation/scope.md)
+## Planned milestones
 
 ### M03 – Select a reproducible training subset
 
@@ -58,6 +51,7 @@ A small local Vortex cookbook: filter speech metadata, decode selected audio, an
 
 ## Completed milestones
 
+- M02 – Prepare one dataset in two formats: Complete (2026-10-06). Published and independently verified the pinned 1,000-row dataset pair; repeated 50-row preparations have identical logical contents. [Scope](archive/M02_dataset_preparation/scope.md) · [Report](archive/M02_dataset_preparation/completion_report.md)
 - M01 – Bootstrap and smoke-test: Complete (2026-10-06). Locked the Python 3.11 environment and verified both native scanners plus known-sample WAV/FLAC decoding. [Scope](archive/M01_bootstrap/scope.md) · [Report](archive/M01_bootstrap/completion_report.md)
 
 

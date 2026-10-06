@@ -23,3 +23,17 @@ that conversion explicitly. WAV and FLAC decode to the expected float32 samples.
 
 Sandbox DNS initially prevented dependency downloads; approved network escalation
 completed lock/install. No global Python or Poetry configuration was changed.
+
+## M02: Source and preparation
+
+- `datasets` 5.1.0 supports `load_dataset(..., streaming=True, revision=..., token=False)`
+  with `cast_column("audio", Audio(decode=False))`. The pinned source returns actual
+  encoded bytes alongside a path; there is no need to decode through TorchCodec or
+  trust stale source-machine paths. Three source records verified mono 16 kHz FLAC
+  headers, including clip `374-180298-0000` (232,480 frames).
+- The resolved immutable revision is
+  `71cacbfb7e2354c4226d01e70d77d5fca3d04ba1` (`clean` / `train.100`).
+- Hub access is public and explicitly unauthenticated. A rate-limit suggestion is
+  emitted by the Hub client; no credential is required for this workflow.
+- A useful acquisition example should distinguish disabling waveform decoding
+  from avoiding all extra shard/network I/O, and preserve encoded bytes directly.
